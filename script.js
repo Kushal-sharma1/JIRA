@@ -6,6 +6,7 @@ let modalColor = colors[colors.length-1];
 const mainCont =document.querySelector(".main-cont");
 const textArea =document.querySelector("textarea");
 let ticketArr=[];
+let toolBoxColor =document.querySelectorAll(".toolbox-color-cont>*");
 let isModal =false;
 //event on add button for creating displaying textarea
 addbtn.addEventListener("click",function(){
@@ -64,7 +65,7 @@ if(!ticketId){
   localStorage.setItem("tickets",JSON.stringify(ticketArr));
 }
 }
-
+//load previous content
 if(localStorage.getItem("tickets")){
   ticketArr=JSON.parse(localStorage.getItem("tickets"));
   ticketArr.forEach(
@@ -73,5 +74,44 @@ if(localStorage.getItem("tickets")){
     }
   )
 }
+// filter on color
+for(let i=0;i<toolBoxColor.length;i++){
+toolBoxColor[i].addEventListener("click",function(){
+let targetColor =toolBoxColor[i].classList[0];
+let filteredArr = ticketArr.filter(function( tickobj){
+return (tickobj.ticketColor==targetColor) ;
+});
+let ticketCont =document.querySelectorAll(".ticket-cont");
+//remove all tickets
+for(let j=0;j<ticketCont.length;j++){
+  ticketCont[j].remove();
+}
 
+//display targetcolor tickets
+filteredArr.forEach(
+  function (creatObj){
+   createTicket(creatObj.ticketColor,creatObj.data,creatObj.ticketId);
+
+  }
+);
+
+})
+
+toolBoxColor[i].addEventListener("dblclick",function(){
+let ticketCont =document.querySelectorAll(".ticket-cont");
+//remove all tickets
+for(let j=0;j<ticketCont.length;j++){
+  ticketCont[j].remove();
+}
+//display all Tickets
+ticketArr.forEach(
+  function (creatObj){
+   createTicket(creatObj.ticketColor,creatObj.data,creatObj.ticketId);
+
+  }
+);
+  
+})
+
+}
 
