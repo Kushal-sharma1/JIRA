@@ -7,6 +7,7 @@ const mainCont =document.querySelector(".main-cont");
 const textArea =document.querySelector("textarea");
 let ticketArr=[];
 let toolBoxColor =document.querySelectorAll(".toolbox-color-cont>*");
+let removeBtn = document.querySelector(".remove-btn");
 let isModal =false;
 //event on add button for creating displaying textarea
 addbtn.addEventListener("click",function(){
@@ -54,7 +55,8 @@ ticket.innerHTML=`
 <div class="task-area">${data}</div>
 `
 mainCont.appendChild(ticket);
-
+handleRemove(ticket,id);
+handleColor(ticket,id);
 if(!ticketId){
   ticketArr.push(
    { ticketColor,
@@ -74,6 +76,7 @@ if(localStorage.getItem("tickets")){
     }
   )
 }
+
 // filter on color
 for(let i=0;i<toolBoxColor.length;i++){
 toolBoxColor[i].addEventListener("click",function(){
@@ -115,3 +118,56 @@ ticketArr.forEach(
 
 }
 
+// remove element 
+
+let removeBtnActive =false;
+removeBtn.addEventListener("click",function(){
+    if(removeBtnActive){
+      removeBtn.style.color="white";
+    }else{
+      removeBtn.style.color="red";
+    }
+  removeBtnActive = !removeBtnActive;
+});
+
+//give index from ticketArr (on the basis of id)
+
+function getIdx(id){
+let idx =ticketArr.findIndex(function(tickObj){
+  return tickObj.ticketId==id ;
+})
+return idx;
+}
+//remove tickets 
+function handleRemove(ticket,id){
+ticket.addEventListener("click",function(){
+if(!removeBtnActive) return;
+let idxID = getIdx(id);
+ticketArr.splice(idxID,1);
+//update in local Storage
+localStorage.setItem("tickets",JSON.stringify(ticketArr));
+//update main-contain
+ticket.remove();
+});
+
+}
+
+// change the ticket color (or priority color)
+
+function handleColor(ticket ,id){
+let ticketStrip =ticket.querySelector(".ticket-color");
+ticketStrip.addEventListener("click",function(){
+let currColor = ticketStrip.classList[1];
+let currColorIndx= colors.indexOf(currColor);
+let newColorIndx = (currColorIndx+1)%colors.length;
+//update color in tickets
+ticketStrip.classList.remove(currColor);
+ticketStrip.classList.add(colors[newColorIndx]);
+//update color in local storage
+let indxID =getIdx(id);
+ticketArr[indxID].ticketColor=colors[newColorIndx];
+localStorage.setItem("tickets",JSON.stringify(ticketArr));
+
+});
+
+}
