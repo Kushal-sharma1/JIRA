@@ -9,6 +9,8 @@ let ticketArr=[];
 let toolBoxColor =document.querySelectorAll(".toolbox-color-cont>*");
 let removeBtn = document.querySelector(".remove-btn");
 let isModal =false;
+let openLock="fa-lock-open";
+let closeLock="fa-lock";
 //event on add button for creating displaying textarea
 addbtn.addEventListener("click",function(){
   if(!isModal){
@@ -53,10 +55,12 @@ ticket.innerHTML=`
 <div class ="ticket-color ${ticketColor}"></div>
 <div class="ticket-id">${id}</div>
 <div class="task-area">${data}</div>
+<div class="ticket-lock"><i class="fa-solid fa-lock"></i><div>
 `
 mainCont.appendChild(ticket);
 handleRemove(ticket,id);
 handleColor(ticket,id);
+handleLock(ticket,id);
 if(!ticketId){
   ticketArr.push(
    { ticketColor,
@@ -166,6 +170,30 @@ ticketStrip.classList.add(colors[newColorIndx]);
 //update color in local storage
 let indxID =getIdx(id);
 ticketArr[indxID].ticketColor=colors[newColorIndx];
+localStorage.setItem("tickets",JSON.stringify(ticketArr));
+
+});
+
+}
+
+//handling lock
+function handleLock(ticket,id){
+let ticketLockEle = ticket.querySelector(".ticket-lock");
+let ticketLock = ticketLockEle.children[0];
+let ticketTaskArea =ticket.querySelector(".task-area");
+ticketLock.addEventListener("click",function(){
+  let ticketIdx=getIdx(id);
+  if(ticketLock.classList.contains(closeLock)){
+    ticketLock.classList.remove(closeLock);
+    ticketLock.classList.add(openLock);
+    ticketTaskArea.setAttribute("contenteditable","true");
+  }else{
+    ticketLock.classList.remove(openLock);
+    ticketLock.classList.add(closeLock);
+    ticketTaskArea.setAttribute("contenteditable","false");
+  }
+ 
+ ticketArr[ticketIdx].data = ticketTaskArea.innerText;
 localStorage.setItem("tickets",JSON.stringify(ticketArr));
 
 });

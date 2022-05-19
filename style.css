@@ -117,14 +117,23 @@ resize: none;
     background-color: red;
 }
 .task-area{
-    height:calc(100% - 1rem -2rem);
+    height:calc(100% - 1rem - 2rem - 2rem);
     font-size:1.5rem;
     overflow-wrap: break-word;
     outline:none;
 }
+.ticket-lock{
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    height:2rem;
+    display:flex;
+    justify-content: flex-end;
+}
 .main-cont{
     display:flex;
-    justify-content: space-evenly;
+    gap:2rem;
+    justify-content: center;
+    padding:2rem;
     flex-wrap: wrap;
 }
 
